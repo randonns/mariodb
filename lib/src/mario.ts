@@ -1,6 +1,7 @@
 import mariadb, { PoolConfig, Pool, Connection } from "mariadb"
 import ExecutionContext from "./context"
 import SQL from "./sql"
+import Transaction from "./transaction"
 import { beautifyQueryResult } from "./util"
 
 export default class Mario implements ExecutionContext {
@@ -23,6 +24,10 @@ export default class Mario implements ExecutionContext {
     } finally {
       await con?.end()
     }
+  }
+
+  async transaction(): Promise<Transaction> {
+    return new Transaction(await this.pool.getConnection())
   }
 
   async end() {
