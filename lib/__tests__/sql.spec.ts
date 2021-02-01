@@ -1,4 +1,4 @@
-import createMario, { SQL, sql } from "mariodb"
+import { createMario, SQL, sql } from "mariodb"
 import dotenv from "dotenv"
 import path from "path"
 

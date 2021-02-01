@@ -3,7 +3,7 @@ import Mario from "./mario"
 import SQL from "./sql"
 import Transaction from "./transaction"
 
-export default function createMario(options: PoolConfig) {
+export function createMario(options: PoolConfig) {
   return new Mario(options)
 }
 

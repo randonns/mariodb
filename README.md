@@ -13,7 +13,7 @@ $ npm install mariodb
 ## Basic Usage
 
 ```js
-const mario = require("mariodb")({
+const mario = require("mariodb").createMario({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   connectionLimit: 5
@@ -32,7 +32,7 @@ Connection options are [here](https://github.com/mariadb-corporation/mariadb-con
 ## Multiple Databases
 
 ```js
-const createMario = require("mariodb")
+const { createMario } = require("mariodb")
 
 const mario1 = createMario({
   host: process.env.DB1_HOST,
@@ -70,16 +70,16 @@ You can create `sql` without context to make it reusable.
 
 ```js
 // sqls.js
-import { sql } from "mariodb"
+const { sql } = require("mariodb")
 
 // Create a sql without context
-export const insertSql = sql`INSERT INTO ...`
+exports.insertSql = sql`INSERT INTO ...`
 ```
 
 Not only `Mario` but also `Transaction` instances work as contexts.
 
 ```js
-import { insertSql } from "./sqls"
+const { insertSql } = require("./sqls")
 
 // Run with Mario instance
 const result1 = await insertSql.run(mario)

@@ -1,4 +1,4 @@
-import createMario, { Mario, ExecutionContext } from "mariodb"
+import { createMario, Mario } from "mariodb"
 import dotenv from "dotenv"
 import path from "path"
 
