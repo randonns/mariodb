@@ -25,4 +25,5 @@ jobs:
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          package: ./lib/package.json
           tag: ${{ env.RELEASE_VERSION }}
