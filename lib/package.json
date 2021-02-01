@@ -13,7 +13,7 @@
   "keywords": [
     "mariadb"
   ],
-  "author": "randonns",
+  "author": "HyukJin Son <randonns@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/randonns/mariodb/issues"
