@@ -108,4 +108,15 @@ describe("SQL", () => {
     const result = await s.run()
     expect(result).toHaveLength(1)
   })
+
+  test("SELECT : 좌우 공백 제거", async () => {
+    const s = mario.sql`   AND age = ${28}   `
+    s.append(sql`    AND deleted = ${false}   `)
+    s.prepend(sql`   SELECT * FROM Users  WHERE name LIKE ${`%홍%`}    `)
+    expect(s.statement).toBe("SELECT * FROM Users  WHERE name LIKE ? AND age = ? AND deleted = ?")
+    expect(s.params).toEqual(["%홍%", 28, false])
+
+    const result = await s.run()
+    expect(result).toHaveLength(1)
+  })
 })
