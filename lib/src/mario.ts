@@ -11,12 +11,12 @@ export default class Mario implements ExecutionContext {
     this.pool = mariadb.createPool(options)
   }
 
-  sql(strings: string[], ...keys: any[]) {
+  sql(strings: string[], ...keys: any[]): SQL {
     return new SQL(this, strings, keys)
   }
 
   async execute(sql: SQL): Promise<any> {
-    let con: Connection
+    let con: Connection | null = null
     try {
       con = await this.pool.getConnection()
       const result = await con.query(sql.statement, sql.params)

@@ -2,8 +2,10 @@
   "name": "mariodb",
   "version": "0.0.1",
   "description": "The simplest MariaDB client for Node.js.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "jest --runInBand"
   },
   "repository": {
@@ -23,6 +25,7 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@types/lodash": "^4.14.168",
     "babel-jest": "^26.6.3",
     "dotenv": "^8.2.0",
     "jest": "^26.6.3",

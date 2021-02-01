@@ -1,6 +1,6 @@
 on:
   push:
-    tags: [ '*' ]
+    tags: ["*"]
   workflow_dispatch:
 
 jobs:
@@ -11,10 +11,16 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '15'
+          node-version: "15"
 
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - run: cd lib
       - run: npm install
+      - run: npm run build
+
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          tag: ${{ env.RELEASE_VERSION }}
