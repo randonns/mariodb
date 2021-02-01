@@ -1,3 +1,4 @@
+import { values } from "lodash"
 import ExecutionContext from "./context"
 
 export default class SQL {
@@ -37,7 +38,24 @@ export default class SQL {
 
   async run(context: ExecutionContext | null) {
     const ctx = context || this.context
-    if (ctx) return await ctx.run(this)
+    if (ctx) return await ctx.execute(this)
     else throw new Error("Execution context not found.")
+  }
+
+  async rows(context: ExecutionContext | null) {
+    const rows = await this.run(context)
+    if (!Array.isArray(rows)) throw new Error("Method 'rows/row/value' should be used for query statement.")
+    return rows
+  }
+
+  async row(context: ExecutionContext | null) {
+    const rows = await this.rows(context)
+    return rows.length === 0 ? null : rows[0]
+  }
+
+  async value(context: ExecutionContext | null) {
+    const row = await this.row(context)
+    const vs = values(row)
+    return vs.length === 0 ? null : vs[0]
   }
 }

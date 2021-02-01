@@ -15,7 +15,7 @@ export default class Mario implements ExecutionContext {
     return new SQL(this, strings, keys)
   }
 
-  async run(sql: SQL): Promise<any> {
+  async execute(sql: SQL): Promise<any> {
     let con: Connection
     try {
       con = await this.pool.getConnection()

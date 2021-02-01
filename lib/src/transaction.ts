@@ -12,7 +12,7 @@ export default class Transaction implements ExecutionContext {
     return new SQL(this, strings, keys)
   }
 
-  async run(sql: SQL): Promise<any> {
+  async execute(sql: SQL): Promise<any> {
     const result = await this.con.query(sql.statement, sql.params)
     return beautifyQueryResult(result)
   }

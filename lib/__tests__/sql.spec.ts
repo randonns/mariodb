@@ -184,4 +184,63 @@ describe("SQL", () => {
     const result = await s2.run()
     expect(result).toHaveLength(2)
   })
+
+  test("rows", async () => {
+    const s = mario.sql`SELECT * FROM Users`
+    expect(s).toBeInstanceOf(SQL)
+    expect(s.statement).toBe("SELECT * FROM Users")
+    expect(s.params).toEqual([])
+
+    const result = await s.rows()
+    expect(result).toHaveLength(4)
+  })
+
+  test("rows : 업데이트에 사용할 경우", async () => {
+    const s = mario.sql`UPDATE Users SET age = ${30} WHERE id = ${100}`
+
+    await expect(s.rows()).rejects.toThrow(new Error("Method 'rows/row/value' should be used for query statement."))
+  })
+
+  test("row", async () => {
+    const s = mario.sql`SELECT * FROM Users ORDER BY id DESC `
+    expect(s).toBeInstanceOf(SQL)
+    expect(s.statement).toBe("SELECT * FROM Users ORDER BY id DESC")
+    expect(s.params).toEqual([])
+
+    const result = await s.row()
+    expect(result).toBeDefined()
+    expect(result.age).toBe(71)
+  })
+
+  test("row : 결과가 없는 경우", async () => {
+    const s = mario.sql`SELECT * FROM Users WHERE id = ${100} `
+    expect(s).toBeInstanceOf(SQL)
+    expect(s.statement).toBe("SELECT * FROM Users WHERE id = ?")
+    expect(s.params).toEqual([100])
+
+    const result = await s.row()
+    expect(result).toBeNull()
+  })
+
+  test("value : 숫자", async () => {
+    const s = mario.sql`SELECT COUNT(*) FROM Users`
+    expect(s).toBeInstanceOf(SQL)
+    expect(s.statement).toBe("SELECT COUNT(*) FROM Users")
+    expect(s.params).toEqual([])
+
+    const result = await s.value()
+    expect(typeof result).toBe("number")
+    expect(result).toBe(4)
+  })
+
+  test("value : 문자열", async () => {
+    const s = mario.sql`SELECT name, age FROM Users ORDER BY id DESC`
+    expect(s).toBeInstanceOf(SQL)
+    expect(s.statement).toBe("SELECT name, age FROM Users ORDER BY id DESC")
+    expect(s.params).toEqual([])
+
+    const result = await s.value()
+    expect(typeof result).toBe("string")
+    expect(result).toBe("홍징")
+  })
 })
