@@ -5,8 +5,24 @@ export default class SQL {
   params: any[]
 
   constructor(private context: ExecutionContext | null, private strings: string[], private keys: any[]) {
-    this.statement = strings.join("?").trim()
-    this.params = keys
+    if (strings.length !== keys.length + 1) throw new Error("Invalid template literal.")
+
+    this.statement = ""
+    this.params = []
+
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i] instanceof SQL) {
+        this.statement += strings[i]
+        this.statement += keys[i].statement
+        this.params = this.params.concat(keys[i].params)
+      } else {
+        this.statement += strings[i] + "?"
+        this.params.push(keys[i])
+      }
+    }
+
+    this.statement += strings[keys.length]
+    this.statement = this.statement.trim()
   }
 
   append(sql: SQL): void {

@@ -174,4 +174,14 @@ describe("SQL", () => {
 
     await expect(s.run()).rejects.toThrow(/You have an error in your SQL syntax;/)
   })
+
+  test("SELECT : Nesting", async () => {
+    const s1 = mario.sql`AND deleted = ${false} `
+    const s2 = mario.sql` SELECT * FROM Users WHERE name LIKE ${`%홍%`} ${s1}  AND age < ${30}  `
+    expect(s2.statement).toBe("SELECT * FROM Users WHERE name LIKE ? AND deleted = ?  AND age < ?")
+    expect(s2.params).toEqual(["%홍%", false, 30])
+
+    const result = await s2.run()
+    expect(result).toHaveLength(2)
+  })
 })
