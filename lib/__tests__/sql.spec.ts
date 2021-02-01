@@ -119,4 +119,59 @@ describe("SQL", () => {
     const result = await s.run()
     expect(result).toHaveLength(1)
   })
+
+  test("INSERT", async () => {
+    const s = mario.sql`INSERT INTO Users (id, name, age, deleted, createdAt)
+      VALUES (${5}, ${"테스트"}, ${30}, ${false}, NOW())`
+    expect(s.statement).toBe("INSERT INTO Users (id, name, age, deleted, createdAt)\n      VALUES (?, ?, ?, ?, NOW())")
+    expect(s.params).toEqual([5, "테스트", 30, false])
+
+    const result = await s.run()
+    expect(result).toBeInstanceOf(Object)
+    expect(result.affectedRows).toBe(1)
+    expect(result.insertId).toBe(5)
+    expect(result.warningStatus).toBe(0)
+  })
+
+  test("UPDATE", async () => {
+    const s = mario.sql`UPDATE Users SET age = ${20} WHERE id = ${5}`
+    expect(s.statement).toBe("UPDATE Users SET age = ? WHERE id = ?")
+    expect(s.params).toEqual([20, 5])
+
+    const result = await s.run()
+    expect(result).toBeInstanceOf(Object)
+    expect(result.affectedRows).toBe(1)
+    expect(result.insertId).toBe(0)
+    expect(result.warningStatus).toBe(0)
+  })
+
+  test("UPDATE : 결과 확인", async () => {
+    const s = mario.sql`SELECT age FROM Users WHERE id = ${5}`
+    expect(s.statement).toBe("SELECT age FROM Users WHERE id = ?")
+    expect(s.params).toEqual([5])
+
+    const result = await s.run()
+    expect(result).toHaveLength(1)
+    expect(result[0].age).toBe(20)
+  })
+
+  test("DELETE", async () => {
+    const s = mario.sql`DELETE FROM Users WHERE id = ${5}`
+    expect(s.statement).toBe("DELETE FROM Users WHERE id = ?")
+    expect(s.params).toEqual([5])
+
+    const result = await s.run()
+    expect(result).toBeInstanceOf(Object)
+    expect(result.affectedRows).toBe(1)
+    expect(result.insertId).toBe(0)
+    expect(result.warningStatus).toBe(0)
+  })
+
+  test("DELETE : Syntax Error", async () => {
+    const s = mario.sql`DELETE FROM Users WHE RE id = ${5}`
+    expect(s.statement).toBe("DELETE FROM Users WHE RE id = ?")
+    expect(s.params).toEqual([5])
+
+    await expect(s.run()).rejects.toThrow(/You have an error in your SQL syntax;/)
+  })
 })
